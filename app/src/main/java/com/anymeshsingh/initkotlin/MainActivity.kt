@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,6 +17,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
+
+    var player1 = ArrayList<Int>()
+    var player2 = ArrayList<Int>()
+    var activePlayer = 1
+    var winner = -1
+    var autoplayon = false
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     fun btnClick(view:View){
@@ -41,11 +48,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    var player1 = ArrayList<Int>()
-    var player2 = ArrayList<Int>()
-    var activePlayer = 1
-    var winner = -1
-
 
     fun playGame(btnId:Int, btnClicked:Button){
 
@@ -57,6 +59,13 @@ class MainActivity : AppCompatActivity() {
             btnClicked.setBackgroundResource(R.color.x)
             player1.add(btnId)
             activePlayer = 2
+
+            if (autoplayon) {
+                autoplay()
+            }
+            else{
+
+            }
 
         }else{
 
@@ -98,6 +107,55 @@ class MainActivity : AppCompatActivity() {
             winner = 2
         }
         else{
+
+        }
+
+    }
+
+    fun autoPlayToggle(view: View){
+        var autoPlayButton: Button = view as Button
+        if (autoplayon){
+            autoplayon = false
+            autoPlayButton.text = "Auto Play OFF"
+        }else{
+            autoplayon = true
+            autoPlayButton.text = "Auto Play ON"
+            if (activePlayer == 2){
+                autoplay()
+            }
+        }
+
+
+    }
+
+    fun autoplay(){
+        var emptycells = ArrayList<Int>()
+        var celltoselect:Int = 0
+
+        for (cell in 1..9){
+            if (!(player1.contains(cell) || player2.contains(cell))){
+                emptycells.add(cell)
+            }
+        }
+        if (emptycells.size != 0){
+            var r = Random()
+            var randomnumber = r.nextInt((emptycells.size))
+            celltoselect = emptycells[randomnumber]
+
+            var buttontoclick: Button = btn1
+            when(celltoselect){
+                1 -> buttontoclick = btn1
+                2 -> buttontoclick = btn2
+                3 -> buttontoclick = btn3
+                4 -> buttontoclick = btn4
+                5 -> buttontoclick = btn5
+                6 -> buttontoclick = btn6
+                7 -> buttontoclick = btn7
+                8 -> buttontoclick = btn8
+                9 -> buttontoclick = btn9
+            }
+            playGame(celltoselect,buttontoclick)
+        }else{
 
         }
 
